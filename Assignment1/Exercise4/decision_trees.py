@@ -1,7 +1,8 @@
 import csv
 from operator import le, ge
 from sklearn.tree import DecisionTreeClassifier
-
+import sklearn
+import matplotlib.pyplot as plt
 # consider adding constants to refer to headers index
 GENDER = 8
 AGE = 1
@@ -113,11 +114,21 @@ def gini_index_gender():
 
 #print(gini_index_gender())
 
+def sklearn_decision_tree():
+    data = read_csv()
+    inputs = []
+    outputs = []
+    for person in data[1:]:
+        inputs.append(person[:-1])
+        outputs.append(person[SURVIVED])
+        
+    clf = DecisionTreeClassifier(max_depth=3, random_state=123123)
+    clf = clf.fit(inputs, outputs)
 
-
-X = [[0, 0], [1, 1]]
-Y = [0, 1]
-clf = DecisionTreeClassifier()
-clf = clf.fit(X, Y)
-
-print(clf.predict([[2., 2.]]))
+    
+    #print(clf.predict([data[2][:-1]]))
+    plt.figure(figsize=(12,12))
+    sklearn.tree.plot_tree(clf, fontsize=12)
+    plt.show() 
+    return 
+sklearn_decision_tree()

@@ -3,6 +3,7 @@
 let
   my-python-packages = ps: with ps; [
     sklearn-deap
+    matplotlib
     # other python packages
   ];
   my-python = pkgs.python3.withPackages my-python-packages;
