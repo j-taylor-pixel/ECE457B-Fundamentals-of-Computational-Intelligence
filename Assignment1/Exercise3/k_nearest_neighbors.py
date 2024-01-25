@@ -1,7 +1,5 @@
-import matplotlib.pyplot as plt
-import math
 from enum import Enum
-from Assignment1.helpers.helper import read_csv, splice_data, split_rows
+from helpers.helper import read_csv, splice_data, split_rows
 
 DATA='/home/josiah/repos/ECE457B-Fundamentals-of-Computational-Intelligence/Assignment1/Exercise3/A1Q4NearestNeighbors.csv'
 

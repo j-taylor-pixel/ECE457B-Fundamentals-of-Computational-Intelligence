@@ -6,7 +6,6 @@ def read_csv(filename='Assignment1/Exercise3/A1Q4NearestNeighbors.csv'):
     csvreader = csv.reader(file)
     rows = []
     for row in csvreader:
-        #rows.append([float(row[0]), float(row[1]), float(row[2]), float(row[3])])
         rows.append(row)
     file.close()
     return rows
