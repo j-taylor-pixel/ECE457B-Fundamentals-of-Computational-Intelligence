@@ -111,4 +111,13 @@ def gini_index_gender():
     gini_index = 1 - (male_count / total) ** 2 - (female_count / total) ** 2 # wrong
     return  gini_index
 
-print(gini_index_gender())
+#print(gini_index_gender())
+
+
+
+X = [[0, 0], [1, 1]]
+Y = [0, 1]
+clf = DecisionTreeClassifier()
+clf = clf.fit(X, Y)
+
+print(clf.predict([[2., 2.]]))
