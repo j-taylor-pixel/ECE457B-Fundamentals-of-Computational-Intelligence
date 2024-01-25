@@ -6,6 +6,8 @@
     python311Packages.pip
     python311Packages.virtualenv
     python311Packages.matplotlib
+    python311Packages.numpy
+    zlib
   ]);
   runScript = "bash";
 }).env

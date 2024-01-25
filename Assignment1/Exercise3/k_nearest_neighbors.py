@@ -63,10 +63,7 @@ def k_nearest_neighbors(k=1, metric=DistanceTypes.cosine, train_size=80, val_siz
     test_perf = performance(k=k,test_rows=test_rows,train_rows=train_rows, metric=metric)
     return val_perf, test_perf
 
-def all():
-
-    print(k_nearest_neighbors(k=1, metric=DistanceTypes.cosine))
-
+def exercise_3_question_2a_b_c():
     # for each metric
     metrics = [DistanceTypes.cosine, DistanceTypes.euclidian]
     data_splits = [[80,10,10],[34,33,33],[25,25,50]]
@@ -75,8 +72,8 @@ def all():
         for data_split in data_splits:
             for k in k_values:
                 val_perf, test_perf = k_nearest_neighbors(k=k, metric=metric, train_size=data_split[0], val_size=data_split[2], test_size=data_split[1])
-    return
-            #print(f"Results: metric: {metric}, data split: {data_split}, k: {k}, val_perf: {val_perf}, test_perf: {test_perf}")
+                print(f"Results: metric: {metric}, data split: {data_split}, k: {k}, val_perf: {val_perf}, test_perf: {test_perf}")
+    return   
             # consider storing everything and making averages or plot or something
 # best result is: metric: euclidian, data split: [34, 33, 33], k: 1, val_perf: 0.6614173228346457, test_perf: 0.6746031746031746
 # need to somehow choose best point from a gazillion values

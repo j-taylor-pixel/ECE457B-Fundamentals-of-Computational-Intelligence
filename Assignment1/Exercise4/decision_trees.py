@@ -2,7 +2,7 @@ from operator import le, ge
 from sklearn.tree import DecisionTreeClassifier
 import sklearn
 import matplotlib.pyplot as plt
-from Assignment1.helpers.helper import read_csv
+from helpers.helper import read_csv
 GENDER = 8
 AGE = 1
 SURVIVED = 9
