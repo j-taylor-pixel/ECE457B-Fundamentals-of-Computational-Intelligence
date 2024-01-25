@@ -8,26 +8,19 @@ AGE = 1
 SURVIVED = 9
 DATA='/home/josiah/repos/ECE457B-Fundamentals-of-Computational-Intelligence/Assignment1/Exercise4/A1Q3DecisionTrees.csv'
 
-
 def calculate_impurity_of_only_gender_splitting_tree():
     data = read_csv(filename=DATA)
 
-    female_count = 0
-    survived_female_count = 0
-    male_count = 0
-    deceased_male_count = 0
+    correct_count = total_count = 0
 
     for person in data[1:]:
-        if person[GENDER] == '0': # check if female
-            female_count += 1
-            if person[SURVIVED] == '1': # check if survived
-                survived_female_count += 1
-        else:
-            male_count += 1
-            if person[SURVIVED] == '0':
-                deceased_male_count += 1
+        total_count += 1
+        if person[GENDER] == '0' and person[SURVIVED] == '1': # check if female and survived
+            correct_count += 1
+        elif person[GENDER] == '1' and person[SURVIVED] == '0': # male and not survived
+            correct_count += 1
     # return wrong predictions / total predictions
-    return 1 - (survived_female_count + deceased_male_count) / (female_count + male_count) # calculate impurity
+    return round(1 - (correct_count / total_count), 3)# calculate impurity
 
 def age_impurity(age=25, sign=le):
     data = read_csv(filename=DATA)
@@ -40,7 +33,7 @@ def age_impurity(age=25, sign=le):
         elif not sign(int(person[AGE]), age) and person[SURVIVED] == '0':
             correct_count += 1
 
-    return 1 - (correct_count / total_count)
+    return round(1 - (correct_count / total_count), 3)
 
 def compare_age_impurity():
     print(f"Impurity at boundary=25 is {age_impurity(25)}, impurity at boundary=65 is {age_impurity(65, sign=ge)}")
@@ -49,7 +42,7 @@ def compare_age_impurity():
 def gender_age_impurity(age=25, sign=le):
     # gender split at first level
     # age split at over 25/65 second level
-    data = help.read_csv(filename=DATA)
+    data = read_csv(filename=DATA)
     correct_count = total_count = 0
     for person in data[1:]:
         total_count += 1
@@ -65,7 +58,7 @@ def gender_age_impurity(age=25, sign=le):
             elif not sign(int(person[AGE]), age) and person[SURVIVED] == '0':
                 correct_count += 1
 
-    return 1 - correct_count / total_count
+    return round(1 - correct_count / total_count, 3)
 
 # split on age first
 def age_gender_impurity(age=25, sign=le):
@@ -85,8 +78,7 @@ def age_gender_impurity(age=25, sign=le):
             elif person[GENDER] == '1' and person[SURVIVED] == '0':
                 correct_count += 1
 
-
-    return 1 - correct_count / total_count
+    return round(1 - correct_count / total_count, 3)
 
 def gini_index_gender():
     data = read_csv(filename=DATA)
@@ -102,7 +94,9 @@ def gini_index_gender():
     gini_index = 1 - (male_count / total) ** 2 - (female_count / total) ** 2 # wrong
     return  gini_index
 
-#print(gini_index_gender())
+def gini_index_age():
+    data = read_csv(filename=DATA)
+    
 
 def sklearn_decision_tree(criterion='gini'):
     data = read_csv(filename=DATA)
