@@ -1,7 +1,13 @@
 from enum import Enum
 from helpers.helper import read_csv, splice_data, split_rows
+import matplotlib.pyplot as plt
 
 DATA='/home/josiah/repos/ECE457B-Fundamentals-of-Computational-Intelligence/Assignment1/Exercise3/A1Q4NearestNeighbors.csv'
+    # column attributes are the following
+    #   1. Number of times pregnant
+    #   2. Plasma glucose concentration a 2 hours in an oral glucose tolerance test
+    #   3. Diastolic blood pressure (mm Hg)
+    #   4. Classifier, where 1 is positive diabetes
 
 class DistanceTypes(str, Enum):
     cosine = 'cosine'
@@ -61,26 +67,51 @@ def k_nearest_neighbors(k=1, metric=DistanceTypes.cosine, train_size=80, val_siz
 
     val_perf = performance(k=k,test_rows=val_rows,train_rows=train_rows, metric=metric)
     test_perf = performance(k=k,test_rows=test_rows,train_rows=train_rows, metric=metric)
-    return val_perf, test_perf
+    return round(val_perf, 3), round(test_perf, 3)
 
 def exercise_3_question_2a_b_c():
     # for each metric
     metrics = [DistanceTypes.cosine, DistanceTypes.euclidian]
     data_splits = [[80,10,10],[34,33,33],[25,25,50]]
-    k_values = [1,3,5,11]
+    k_values = [1]
     for metric in metrics:
         for data_split in data_splits:
             for k in k_values:
                 val_perf, test_perf = k_nearest_neighbors(k=k, metric=metric, train_size=data_split[0], val_size=data_split[2], test_size=data_split[1])
                 print(f"Results: metric: {metric}, data split: {data_split}, k: {k}, val_perf: {val_perf}, test_perf: {test_perf}")
     return   
-            # consider storing everything and making averages or plot or something
-# best result is: metric: euclidian, data split: [34, 33, 33], k: 1, val_perf: 0.6614173228346457, test_perf: 0.6746031746031746
-# need to somehow choose best point from a gazillion values
 
-    # column attributes are the following
-    #   1. Number of times pregnant
-    #   2. Plasma glucose concentration a 2 hours in an oral glucose tolerance test
-    #   3. Diastolic blood pressure (mm Hg)
-    #   4. Classifier, where 1 is positive diabetes
+def exercise_3_question_3():
+    # for each metric
+    metrics = [DistanceTypes.cosine, DistanceTypes.euclidian]
+    #metrics = [DistanceTypes.cosine]
+    data_splits = [[80,10,10],[34,33,33],[25,25,50]]
+    k_values = [1,3,5,11]
+    results_x = []
+    results_y = []
+    colors=['r','g','b','k', 'r','g','b','k', 'r','g','b','k']
+    plt.figure()
 
+    for metric in metrics:
+        for data_split in data_splits:
+            split_results_x = [] 
+            split_results_y = []
+            for k in k_values:
+                val_perf, test_perf = k_nearest_neighbors(k=k, metric=metric, train_size=data_split[0], val_size=data_split[2], test_size=data_split[1])
+                split_results_x.append(k)
+                split_results_y.append(val_perf)
+                #print(f"Results: metric: {metric}, data split: {data_split}, k: {k}, val_perf: {val_perf}, test_perf: {test_perf}")
+            
+            legend = f"{metric},{data_split}"
+ 
+            plt.plot(split_results_x,split_results_y, label=legend)
+            plt.legend()
+            results_x.append(split_results_x)
+            split_results_x = []
+            results_y.append(split_results_y)
+            split_results_y = []
+    # plot performance on y axis
+    # k should be on x axis        
+    plt.savefig('Performance across multiple distance methods and k sizes')
+
+    return   
