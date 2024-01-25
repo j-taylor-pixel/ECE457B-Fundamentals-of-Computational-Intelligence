@@ -1,26 +1,16 @@
-import csv
 from operator import le, ge
 from sklearn.tree import DecisionTreeClassifier
 import sklearn
 import matplotlib.pyplot as plt
-# consider adding constants to refer to headers index
+from Assignment1.helpers.helper import read_csv
 GENDER = 8
 AGE = 1
 SURVIVED = 9
-DATA = './A1Q3DecisionTrees.csv'
+DATA='/home/josiah/repos/ECE457B-Fundamentals-of-Computational-Intelligence/Assignment1/Exercise4/A1Q3DecisionTrees.csv'
 
-def read_csv(filename=DATA):
-    file = open(filename)
-    #type(file)
-    csvreader = csv.reader(file)
-    persons = []
-    for person in csvreader:
-        persons.append(person)
-    file.close()
-    return persons
 
 def calculate_impurity_of_only_gender_splitting_tree():
-    data = read_csv()
+    data = read_csv(filename=DATA)
 
     female_count = 0
     survived_female_count = 0
@@ -40,7 +30,7 @@ def calculate_impurity_of_only_gender_splitting_tree():
     return 1 - (survived_female_count + deceased_male_count) / (female_count + male_count) # calculate impurity
 
 def age_impurity(age=25, sign=le):
-    data = read_csv()
+    data = read_csv(filename=DATA)
     correct_count = 0
     total_count = 0
     for person in data[1:]:
@@ -59,7 +49,7 @@ def compare_age_impurity():
 def gender_age_impurity(age=25, sign=le):
     # gender split at first level
     # age split at over 25/65 second level
-    data = read_csv()
+    data = help.read_csv(filename=DATA)
     correct_count = total_count = 0
     for person in data[1:]:
         total_count += 1
@@ -79,7 +69,7 @@ def gender_age_impurity(age=25, sign=le):
 
 # split on age first
 def age_gender_impurity(age=25, sign=le):
-    data = read_csv()
+    data = read_csv(filename=DATA)
     correct_count = total_count = 0
     for person in data[1:]:
         total_count += 1
@@ -99,7 +89,7 @@ def age_gender_impurity(age=25, sign=le):
     return 1 - correct_count / total_count
 
 def gini_index_gender():
-    data = read_csv()
+    data = read_csv(filename=DATA)
     male_count = female_count = 0
     male_survived_count = female_survived_count = 0
     for person in data:
@@ -114,21 +104,21 @@ def gini_index_gender():
 
 #print(gini_index_gender())
 
-def sklearn_decision_tree():
-    data = read_csv()
+def sklearn_decision_tree(criterion='gini'):
+    data = read_csv(filename=DATA)
     inputs = []
     outputs = []
     for person in data[1:]:
         inputs.append(person[:-1])
-        outputs.append(person[SURVIVED])
+        outputs.append([person[SURVIVED]])
         
-    clf = DecisionTreeClassifier(max_depth=3, random_state=123123)
+    clf = DecisionTreeClassifier(max_depth=3, random_state=123123, criterion=criterion, splitter='random')
     clf = clf.fit(inputs, outputs)
 
-    
-    #print(clf.predict([data[2][:-1]]))
     plt.figure(figsize=(12,12))
     sklearn.tree.plot_tree(clf, fontsize=12)
-    plt.show() 
+    #plt.show() 
+    plt.savefig('decision_tree')
     return 
-sklearn_decision_tree()
+
+sklearn_decision_tree(criterion='entropy')

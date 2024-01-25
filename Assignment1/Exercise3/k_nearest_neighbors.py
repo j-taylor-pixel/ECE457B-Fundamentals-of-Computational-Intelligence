@@ -1,12 +1,13 @@
-import csv
 import matplotlib.pyplot as plt
 import math
 from enum import Enum
+from Assignment1.helpers.helper import read_csv, splice_data, split_rows
+
+DATA='/home/josiah/repos/ECE457B-Fundamentals-of-Computational-Intelligence/Assignment1/Exercise3/A1Q4NearestNeighbors.csv'
 
 class DistanceTypes(str, Enum):
     cosine = 'cosine'
     euclidian = 'euclidian'
-
 
 def cosine_similarity(a,b):
     num = denA = denB = 0
@@ -24,34 +25,9 @@ def euclidian_distance(x,y):
 
     return total ** 0.5
 
-def read_csv(filename='Assignment1/Exercise3/A1Q4NearestNeighbors.csv'):
-    file = open(filename)
-    #type(file)
-    csvreader = csv.reader(file)
-    rows = []
-    for row in csvreader:
-        #rows.append([float(row[0]), float(row[1]), float(row[2]), float(row[3])])
-        rows.append(row)
-    file.close()
-    return rows
-
 def string_to_float(rows):
     return [[float(y) for y in x] for x in rows]
-
-# consider making this return index counts
-def splice_data(num_rows=700, train_size=80, val_size=10, test_size=10):
-    train_count = math.ceil(num_rows * train_size / 100)
-    val_count = math.ceil(num_rows * val_size / 100)
-    test_count = num_rows - train_count - val_count
-    return train_count, val_count, test_count
     
-def split_rows(rows, train_count, val_count, test_count):
-    train_rows = rows[:train_count]
-    val_rows = rows[train_count:train_count + val_count]
-    test_rows = rows[train_count + val_count:]
-    return train_rows, val_rows, test_rows
-
-
 def performance(k, test_rows, train_rows, metric):
     # loop thru test data
     correct_count = wrong_count = 0
@@ -80,7 +56,7 @@ def performance(k, test_rows, train_rows, metric):
 
 def k_nearest_neighbors(k=1, metric=DistanceTypes.cosine, train_size=80, val_size=10, test_size=10):
 
-    rows = read_csv()
+    rows = read_csv(filename=DATA)
     rows = string_to_float(rows)
     train_count, val_count, test_count = splice_data(num_rows=len(rows),train_size=train_size, val_size=val_size, test_size=test_size)
     train_rows, val_rows, test_rows = split_rows(rows, train_count, val_count, test_count)
@@ -89,16 +65,19 @@ def k_nearest_neighbors(k=1, metric=DistanceTypes.cosine, train_size=80, val_siz
     test_perf = performance(k=k,test_rows=test_rows,train_rows=train_rows, metric=metric)
     return val_perf, test_perf
 
-print(k_nearest_neighbors(k=1, metric=DistanceTypes.cosine))
+def all():
 
-# for each metric
-metrics = [DistanceTypes.cosine, DistanceTypes.euclidian]
-data_splits = [[80,10,10],[34,33,33],[25,25,50]]
-k_values = [1,3,5,11]
-for metric in metrics:
-    for data_split in data_splits:
-        for k in k_values:
-            val_perf, test_perf = k_nearest_neighbors(k=k, metric=metric, train_size=data_split[0], val_size=data_split[2], test_size=data_split[1])
+    print(k_nearest_neighbors(k=1, metric=DistanceTypes.cosine))
+
+    # for each metric
+    metrics = [DistanceTypes.cosine, DistanceTypes.euclidian]
+    data_splits = [[80,10,10],[34,33,33],[25,25,50]]
+    k_values = [1,3,5,11]
+    for metric in metrics:
+        for data_split in data_splits:
+            for k in k_values:
+                val_perf, test_perf = k_nearest_neighbors(k=k, metric=metric, train_size=data_split[0], val_size=data_split[2], test_size=data_split[1])
+    return
             #print(f"Results: metric: {metric}, data split: {data_split}, k: {k}, val_perf: {val_perf}, test_perf: {test_perf}")
             # consider storing everything and making averages or plot or something
 # best result is: metric: euclidian, data split: [34, 33, 33], k: 1, val_perf: 0.6614173228346457, test_perf: 0.6746031746031746
