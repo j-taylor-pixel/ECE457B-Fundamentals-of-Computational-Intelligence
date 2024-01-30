@@ -1,13 +1,15 @@
 import math
 import csv
 
-def read_csv(filename='Assignment1/Exercise3/A1Q4NearestNeighbors.csv'):
+def read_csv(filename='Assignment1/Exercise3/A1Q4NearestNeighbors.csv', trim_header=False):
     file = open(filename)
     csvreader = csv.reader(file)
     rows = []
     for row in csvreader:
         rows.append(row)
     file.close()
+    if trim_header:
+        rows.pop(0)
     return rows
 
 def splice_data(num_rows=700, train_size=80, val_size=10, test_size=10):

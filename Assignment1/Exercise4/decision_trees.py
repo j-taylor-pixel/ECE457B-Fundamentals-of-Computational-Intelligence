@@ -133,20 +133,27 @@ def entropy_age(age=25, sign=le):
     under_survived_count, under_count, over_not_survived_count, over_count = age_split_metrics(age=age, sign=sign)
     return calc_shannon_entropy(under_survived_count, under_count, over_not_survived_count, over_count)
 
-def sklearn_decision_tree(criterion='gini'): # criterion can also be 'entropy'
-    data = read_csv(filename=DATA)
-    inputs = []
-    outputs = []
-    for person in data[1:]:
-        inputs.append(person[:-1])
-        outputs.append([person[SURVIVED]])
-        
-    clf = DecisionTreeClassifier(max_depth=3, random_state=123123, criterion=criterion, splitter='random')
-    clf = clf.fit(inputs, outputs)
+def sklearn_decision_tree(criterion='gini', splitter='best'): # criterion can also be 'entropy', used solely for question 2oo  
+   data = read_csv(filename=DATA, trim_header=True)
+   inputs = []
+   outputs = []
+   for person in data:
+       inputs.append(person[:-1])
+       outputs.append([person[SURVIVED]])
+      
+   clf = DecisionTreeClassifier(max_depth=3, random_state=123123, criterion=criterion, splitter=splitter)
+   clf = clf.fit(inputs, outputs)
 
-    plt.figure(figsize=(12,12))
-    sklearn.tree.plot_tree(clf, fontsize=12)
-    #plt.show() # doesnt work without interactive 
-    plt.savefig('Assignment1/Exercise4/decision_tree')
-    return 
+   plt.figure(figsize=(12,12))
+   sklearn.tree.plot_tree(clf, fontsize=9)
+   #plt.show() # doesnt work without interactive
+   plt.savefig('Assignment1/Exercise4/decision_tree_q2')
+   return
+
+
+def data_split_decision_trees():
+    criterions = ['gini', 'entropy']
+    data_splits = [[80,10,10],[34,33,33],[25,25,50]]
+    results_x = []
+    results_y = []
 
