@@ -22,11 +22,11 @@ def sample_hundred_points(dimensions=1):
         hundred_points.append(d_dim_point)
     return hundred_points
 
-def euclidian_distance(x, y):
+def squared_euclidian_distance(x, y):
     tot = 0
     for dim in range(len(x)):
         tot += (x[dim] - y[dim]) ** 2
-    return sqrt(tot)
+    return tot
 
 def manhattan_distance(x, y):
     tot = 0
@@ -34,7 +34,7 @@ def manhattan_distance(x, y):
         tot += abs(x[dim] - y[dim])
     return tot 
 
-def measure_distance(hundred_points, distance_measurement=euclidian_distance):
+def measure_distance(hundred_points, distance_measurement=squared_euclidian_distance):
     data = []
     for i_x, point_x in enumerate(hundred_points):
         # do (a) squared eculdian distance, (x-y)^2
@@ -44,7 +44,7 @@ def measure_distance(hundred_points, distance_measurement=euclidian_distance):
                 data.append(tot)
     return data
 
-def plot(distance_measurement=euclidian_distance): # metric can also be manhattan
+def plot(distance_measurement=squared_euclidian_distance): # metric can also be manhattan
     dims = generate_dims()
 
     mean_per_dim, var_per_dim = [], [] # metrics for slope
@@ -57,11 +57,11 @@ def plot(distance_measurement=euclidian_distance): # metric can also be manhatta
 
         average = sum(distances_between_points) / len(distances_between_points)
         variance = np.var(distances_between_points)
+        
         all_averages.append(average)
         all_variance.append(variance)
         mean_per_dim.append(average / d)
         var_per_dim.append(variance / d)
-
         #print(f"Average is: {average}, var is: {variance} with {d} dimensions")
     
     # plot average and standard deviation on y-axis vs dimensions on x-axis
@@ -69,11 +69,15 @@ def plot(distance_measurement=euclidian_distance): # metric can also be manhatta
     plt.plot(dims, all_averages, label='mean')
     plt.plot(dims, all_variance, label='variance')
     plt.legend()
+    plt.xlabel("Number of Dimensions")
+    plt.ylabel("Value of mean/variance")
 
     plt.savefig(f"Assignment1/Exercise2/Mean & var across different dimensions using {distance_measurement.__name__}")
     
     # by analysis, there is a linear relationship between mean and dimensions, and variance and dimensions for manhattan distance
     # calculate slope below
-    print(f"For {distance_measurement.__name__}, mean slope: {np.average(mean_per_dim)}, Var slope: {np.average(var_per_dim)}")
-
+    avg_mean_slope = round(np.average(mean_per_dim), 3)
+    avg_var_slope = round(np.average(var_per_dim), 4)
+    print(f"For {distance_measurement.__name__}, mean slope: {avg_mean_slope}, Var slope: {avg_var_slope}")
+    print(f"For {distance_measurement.__name__}, E(Z)={avg_mean_slope}d, V(Z)={avg_var_slope}d")
     return
