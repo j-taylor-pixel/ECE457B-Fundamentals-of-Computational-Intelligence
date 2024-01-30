@@ -1,11 +1,11 @@
-from Exercise2.sample_plot import plot
+from Exercise2.sample_plot import plot, manhattan_distance, euclidian_distance
 from Exercise3.k_nearest_neighbors import exercise_3_question_2a_b_c, exercise_3_question_3
 from Exercise4.decision_trees import gender_impurity, compare_age_impurity, gender_age_impurity, age_gender_impurity, gini_index_gender, gini_index_age, sklearn_decision_tree, entropy_gender, entropy_age, data_split_decision_trees, varied_max_depth
 from operator import le, ge
 
-#plot() # exercise 2
 
-
+plot(distance_measurement=euclidian_distance) # exercise 2
+plot(distance_measurement=manhattan_distance) # exercise 2
 
 #exercise_3_question_2a_b_c() 
 #exercise_3_question_3()
@@ -23,8 +23,7 @@ from operator import le, ge
 #sklearn_decision_tree(criterion='entropy') # exercise 4, question 2b
 #sklearn_decision_tree(splitter='random') # exercise 4, question 2c
 #data_split_decision_trees() # exercise 4, question 3
-
-varied_max_depth()# exercise 4, question 3
+#varied_max_depth()# exercise 4, question 3
 
 
 
