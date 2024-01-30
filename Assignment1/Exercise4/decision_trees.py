@@ -2,7 +2,7 @@ from operator import le, ge
 from sklearn.tree import DecisionTreeClassifier
 import sklearn
 import matplotlib.pyplot as plt
-from helpers.helper import read_csv
+from helpers.helper import read_csv, splice_data, split_rows
 from math import log2
 
 GENDER = 8
@@ -150,10 +150,43 @@ def sklearn_decision_tree(criterion='gini', splitter='best'): # criterion can al
    plt.savefig('Assignment1/Exercise4/decision_tree_q2')
    return
 
+def perf_of_decision_tree(criterion='gini', train_size=80, val_size=10, test_size=10, max_depth=3):
+    data = read_csv(filename=DATA, trim_header=True)
+    train_count, val_count, test_count = splice_data(num_rows=len(data),train_size=train_size, val_size=val_size, test_size=test_size)
+    train_rows, val_rows, test_rows = split_rows(data, train_count, val_count, test_count)
+    
+    train_inputs, train_outputs = [], []
+    for person in train_rows:
+       train_inputs.append(person[:-1])
+       train_outputs.append([person[SURVIVED]])
+      
+    clf = DecisionTreeClassifier(max_depth=max_depth, random_state=123123, criterion=criterion)
+    clf = clf.fit(train_inputs, train_outputs)
+
+    val_correct, test_correct = 0, 0
+    for person in val_rows:
+        if clf.predict([person[:-1]]) == [person[-1]]:
+            val_correct += 1
+    for person in test_rows:
+        if clf.predict([person[:-1]]) == [person[-1]]:
+            test_correct += 1
+
+    return round(val_correct / val_count, 3), round(test_correct / test_count, 3)
+
+
+def varied_max_depth():
+    data_splits = [[80,10,10]]
+    max_depths = [1, 3, 5, 7, 9, 11]
+    for max_depth in max_depths:
+        for data_split in data_splits:
+            val_perf, test_perf = perf_of_decision_tree(train_size=data_split[0], val_size=data_split[1],test_size=data_split[2], max_depth=max_depth)
+            print(f"For {max_depth}, and data split {data_split}, val_perf is {val_perf}, test_perf is {test_perf}")
 
 def data_split_decision_trees():
     criterions = ['gini', 'entropy']
     data_splits = [[80,10,10],[34,33,33],[25,25,50]]
-    results_x = []
-    results_y = []
-
+    for criterion in criterions:
+        for data_split in data_splits:
+            val_perf, test_perf = perf_of_decision_tree(criterion=criterion, train_size=data_split[0], val_size=data_split[1],test_size=data_split[2])
+            print(f"For {criterion}, and data split {data_split}, val_perf is {val_perf}, test_perf is {test_perf}")
+ 
