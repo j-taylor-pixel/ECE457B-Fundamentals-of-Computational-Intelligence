@@ -1,4 +1,7 @@
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import AdaBoostClassifier
+#from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
 from helpers.helper import read_csv, splice_data, split_rows
 import matplotlib.pyplot as plt
 import numpy as np
@@ -76,11 +79,28 @@ def bagging_ensemble(train_size=80, val_size=10, test_size=10):
     ensemble_accuracy(train_inputs=train_inputs, train_outputs=train_outputs, rows=val_rows, name="Validation")
     ensemble_accuracy(train_inputs=train_inputs, train_outputs=train_outputs, rows=test_rows, name="Test")
     return
+
 def explore_various_hyperparameters():
     criterions = ['gini', 'entropy']
     
+
     return
-def adaptive_boosting():
+
+def adaptive_boosting(train_size=80, val_size=10, test_size=10):
+    data = read_csv(filename=DATA, trim_header=True)
+    train_count, val_count, test_count = splice_data(num_rows=len(data),train_size=train_size, val_size=val_size, test_size=test_size)
+    train_rows, val_rows, test_rows = split_rows(data, train_count, val_count, test_count)
+
+    train_inputs, train_outputs = split_train_data(train_rows=train_rows)
+    train_outputs = np.ravel(train_outputs)
+    estimators = [None, DecisionTreeClassifier(), RandomForestClassifier()]
+    for estimator in estimators:
+        clf = AdaBoostClassifier(n_estimators=100, algorithm="SAMME", random_state=0, estimator=estimator)
+        clf.fit(train_inputs, train_outputs)
+        val_correct = count_correct_entries(val_rows, clf)
+        test_correct = count_correct_entries(test_rows, clf)
+        print(f"For: {estimator}, Val: {val_correct}, test: {test_correct}")
+
     return
 
 def gradient_boosting():
